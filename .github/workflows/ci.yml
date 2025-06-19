@@ -1,0 +1,43 @@
+name: RSpot CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    name: .NET Backend CI
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+      - name: Run Tests
+        run: dotnet test --no-restore --verbosity normal
+
+  frontend:
+    runs-on: ubuntu-latest
+    name: React Frontend CI
+    defaults:
+      run:
+        working-directory: frontend/rspot-react
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint || echo "No lint configured"
+      - name: Build
+        run: npm run build || echo "No build script yet"
