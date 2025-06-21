@@ -1,0 +1,6 @@
+@RSpot.Places.API_HostAddress = http://localhost:5063
+
+GET {{RSpot.Places.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
