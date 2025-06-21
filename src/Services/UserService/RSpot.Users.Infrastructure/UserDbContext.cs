@@ -1,1 +1,7 @@
-// EF Core DbContext
+﻿namespace RSpot.Users.Infrastructure
+{
+    public class UserDbContext
+    {
+
+    }
+}

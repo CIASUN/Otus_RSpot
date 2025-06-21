@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RSpot.Users.Application.Services.Interfaces;
+using RSpot.Users.Application.Services;
+using RSpot.Users.Application.Configuration;
 
 namespace RSpot.Users.API.Controllers
 {

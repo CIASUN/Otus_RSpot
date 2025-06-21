@@ -1,15 +1,12 @@
-﻿namespace RSpot.Users.API
+﻿namespace RSpot.Users.Application.Services
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
-
-    public interface IJwtTokenService
-    {
-        string GenerateToken(string userId, string role);
-    }
+    using RSpot.Users.Application.Configuration;
+    using RSpot.Users.Application.Services.Interfaces;
 
     public class JwtTokenService : IJwtTokenService
     {
@@ -17,13 +14,13 @@
 
         public JwtTokenService(IOptions<JwtSettings> options)
         {
-            _settings = options.Value;
+            _settings = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
         public string GenerateToken(string userId, string role)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
@@ -36,7 +33,8 @@
                 audience: _settings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_settings.ExpiresInMinutes),
-                signingCredentials: creds);
+                signingCredentials: credentials
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
