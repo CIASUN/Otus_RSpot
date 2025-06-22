@@ -64,6 +64,6 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: src/Services/NotificationService/RSpot.Notification.API/Dockerfile
+        file: src/Services/NotificationService/RSpot.NotificationService/Dockerfile
         push: false
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-notification:latest
