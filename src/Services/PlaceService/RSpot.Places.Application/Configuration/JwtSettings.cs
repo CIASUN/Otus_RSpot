@@ -1,4 +1,4 @@
-namespace RSpot.Place.Application.Configuration
+namespace RSpot.Places.Application.Configuration
 {
     public class JwtSettings
     {

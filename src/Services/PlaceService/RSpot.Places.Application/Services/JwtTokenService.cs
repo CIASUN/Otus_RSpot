@@ -1,12 +1,12 @@
-﻿namespace RSpot.Place.Application.Services
+﻿namespace RSpot.Places.Application.Services
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
-    using RSpot.Place.Application.Configuration;
-    using RSpot.Place.Application.Services.Interfaces;
+    using RSpot.Places.Application.Configuration;
+    using RSpot.Places.Application.Services.Interfaces;
 
     public class JwtTokenService : IJwtTokenService
     {

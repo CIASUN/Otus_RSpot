@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Place.Application.Services.Interfaces
+namespace RSpot.Places.Application.Services.Interfaces
 {
     public interface IJwtTokenService
     {
