@@ -15,15 +15,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Places.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Places.Infrastructure", "src\Services\PlaceService\RSpot.Places.Infrastructure\RSpot.Places.Infrastructure.csproj", "{9E68D6C5-9ABE-41CC-9A4A-FC97C810461C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.API", "src\Services\BookingServise\RSpot.Booking.API\RSpot.Booking.API.csproj", "{FB6EB0AD-E03B-461D-ADAA-F57D18FBAF99}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Application", "src\Services\BookingServise\RSpot.Booking.Application\RSpot.Booking.Application.csproj", "{F99D6D8C-C9E6-4C45-8E9C-F50BDD2ABBE9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Infrastructure", "src\Services\BookingServise\RSpot.Booking.Infrastructure\RSpot.Booking.Infrastructure.csproj", "{439FA818-32B5-48AB-AA58-A11713A2E9EE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.NotificationService", "src\Services\NotificationService\RSpot.NotificationService\RSpot.NotificationService.csproj", "{8665D45A-63DD-4DCC-84D8-541A6DF3A567}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Places.API", "src\Services\PlaceService\RSpot.Places.API\RSpot.Places.API.csproj", "{2DB9458E-D6DE-43C4-829E-4808CBA1CE17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.API", "src\Services\BookingService\RSpot.Booking.API\RSpot.Booking.API.csproj", "{9AFA4CBC-698E-48E3-A6A1-0DDD19CA4684}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Application", "src\Services\BookingService\RSpot.Booking.Application\RSpot.Booking.Application.csproj", "{F2DCE6AF-3E3B-4CE9-8004-9B18F1CBE291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Infrastructure", "src\Services\BookingService\RSpot.Booking.Infrastructure\RSpot.Booking.Infrastructure.csproj", "{C2198099-ABD9-4E1E-A179-A63FED7048C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,18 +55,6 @@ Global
 		{9E68D6C5-9ABE-41CC-9A4A-FC97C810461C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E68D6C5-9ABE-41CC-9A4A-FC97C810461C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E68D6C5-9ABE-41CC-9A4A-FC97C810461C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB6EB0AD-E03B-461D-ADAA-F57D18FBAF99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB6EB0AD-E03B-461D-ADAA-F57D18FBAF99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB6EB0AD-E03B-461D-ADAA-F57D18FBAF99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB6EB0AD-E03B-461D-ADAA-F57D18FBAF99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F99D6D8C-C9E6-4C45-8E9C-F50BDD2ABBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F99D6D8C-C9E6-4C45-8E9C-F50BDD2ABBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F99D6D8C-C9E6-4C45-8E9C-F50BDD2ABBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F99D6D8C-C9E6-4C45-8E9C-F50BDD2ABBE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{439FA818-32B5-48AB-AA58-A11713A2E9EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{439FA818-32B5-48AB-AA58-A11713A2E9EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{439FA818-32B5-48AB-AA58-A11713A2E9EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{439FA818-32B5-48AB-AA58-A11713A2E9EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8665D45A-63DD-4DCC-84D8-541A6DF3A567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8665D45A-63DD-4DCC-84D8-541A6DF3A567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8665D45A-63DD-4DCC-84D8-541A6DF3A567}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +63,18 @@ Global
 		{2DB9458E-D6DE-43C4-829E-4808CBA1CE17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DB9458E-D6DE-43C4-829E-4808CBA1CE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DB9458E-D6DE-43C4-829E-4808CBA1CE17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AFA4CBC-698E-48E3-A6A1-0DDD19CA4684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AFA4CBC-698E-48E3-A6A1-0DDD19CA4684}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AFA4CBC-698E-48E3-A6A1-0DDD19CA4684}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AFA4CBC-698E-48E3-A6A1-0DDD19CA4684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2DCE6AF-3E3B-4CE9-8004-9B18F1CBE291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2DCE6AF-3E3B-4CE9-8004-9B18F1CBE291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2DCE6AF-3E3B-4CE9-8004-9B18F1CBE291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2DCE6AF-3E3B-4CE9-8004-9B18F1CBE291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

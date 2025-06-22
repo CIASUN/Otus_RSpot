@@ -1,4 +1,0 @@
-version: "3.8"
-services:
-  users-api:
-    build: ./../src/Services/UserService/RSpot.Users.API

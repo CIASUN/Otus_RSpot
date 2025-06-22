@@ -1,4 +1,4 @@
-name: RSpot CI
+name: CI/CD
 
 on:
   push:
@@ -7,37 +7,63 @@ on:
     branches: [ main ]
 
 jobs:
-  backend:
+  build-and-push:
     runs-on: ubuntu-latest
-    name: .NET Backend CI
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
-      - name: Run Tests
-        run: dotnet test --no-restore --verbosity normal
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAMESPACE: spaceX77
 
-  frontend:
-    runs-on: ubuntu-latest
-    name: React Frontend CI
-    defaults:
-      run:
-        working-directory: frontend/rspot-react
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Lint
-        run: npm run lint || echo "No lint configured"
-      - name: Build
-        run: npm run build || echo "No build script yet"
+    - uses: actions/checkout@v3
+
+    - name: Set up .NET 8 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build & Run Tests
+      run: |
+        dotnet build --configuration Release --no-restore
+        dotnet test --no-build --verbosity normal
+
+    - name: Log in to Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Users API image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: RSpot.Users.API/Dockerfile
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-users:latest
+
+    - name: Build and push Places API image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: RSpot.Places.API/Dockerfile
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-places:latest
+
+    - name: Build and push Booking API image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: RSpot.Booking.API/Dockerfile
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-booking:latest
+
+    - name: Build and push Notification Worker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: RSpot.NotificationService/Dockerfile
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-notification:latest
