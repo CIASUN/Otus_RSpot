@@ -41,7 +41,7 @@ jobs:
       with:
         context: .
         file: src/Services/UserService/RSpot.Users.API/Dockerfile
-        push: true
+        push: false
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-users:latest
 
     - name: Build and push Places API image
@@ -49,7 +49,7 @@ jobs:
       with:
         context: .
         file: src/Services/PlaceService/RSpot.Places.API/Dockerfile
-        push: true
+        push: false
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-places:latest
 
     - name: Build and push Booking API image
@@ -57,7 +57,7 @@ jobs:
       with:
         context: .
         file: src/Services/BookingService/RSpot.Booking.API/Dockerfile
-        push: true
+        push: false
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-booking:latest
 
     - name: Build and push Notification Worker image
@@ -65,5 +65,5 @@ jobs:
       with:
         context: .
         file: src/Services/NotificationService/RSpot.Notification.API/Dockerfile
-        push: true
+        push: false
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/rspot-notification:latest
