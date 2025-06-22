@@ -13,6 +13,7 @@ namespace RSpot.Users.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.WebHost.UseUrls("http://0.0.0.0:80");
 
             // 1. Настройки JWT из appsettings
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -92,7 +93,7 @@ namespace RSpot.Users.API
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             // 4. Middleware: Auth!
             app.UseAuthentication();
