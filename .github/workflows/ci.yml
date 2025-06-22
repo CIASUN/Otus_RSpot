@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAMESPACE: spaceX77
+      IMAGE_NAMESPACE: ciasun
 
     steps:
     - uses: actions/checkout@v3
