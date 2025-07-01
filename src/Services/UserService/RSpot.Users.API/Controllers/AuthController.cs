@@ -2,6 +2,7 @@
 using RSpot.Users.Application.Services.Interfaces;
 using RSpot.Users.Application.Services;
 using RSpot.Users.Application.Configuration;
+using RSpot.Users.Application.DTOs;
 
 namespace RSpot.Users.API.Controllers
 {
@@ -30,10 +31,10 @@ namespace RSpot.Users.API.Controllers
         }
     }
 
-    public class LoginRequest
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
+    //public class LoginRequest
+    //{
+    //    public string Email { get; set; } = string.Empty;
+    //    public string Password { get; set; } = string.Empty;
+    //}
 
 }

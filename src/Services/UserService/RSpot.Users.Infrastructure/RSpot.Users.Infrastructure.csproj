@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RSpot.Users.Application\RSpot.Users.Application.csproj" />
     <ProjectReference Include="..\RSpot.Users.Domain\RSpot.Users.Domain.csproj" />
   </ItemGroup>
 

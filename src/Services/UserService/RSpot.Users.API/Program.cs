@@ -7,6 +7,12 @@ namespace RSpot.Users.API
     using RSpot.Users.Application.Services.Interfaces;
     using RSpot.Users.Application.Services;
     using RSpot.Users.Application.Configuration;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using RSpot.Users.Domain.Models;
+    using RSpot.Users.Domain.Interfaces;
+    using RSpot.Users.Infrastructure.Auth;
+    using RSpot.Users.Infrastructure.Persistence;
 
     public class Program
     {
@@ -22,6 +28,7 @@ namespace RSpot.Users.API
 
             // 2. Подключаем сервис генерации токенов
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
             // 3. Настраиваем JWT аутентификацию
             builder.Services.AddAuthentication(options =>
@@ -44,6 +51,14 @@ namespace RSpot.Users.API
             });
 
             builder.Services.AddAuthorization();
+
+            // 4. DI: EF Core + User сервисы и репозитории
+            builder.Services.AddDbContext<UsersDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("UsersDb")));
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             // Swagger + API
             builder.Services.AddControllers();
@@ -69,21 +84,20 @@ namespace RSpot.Users.API
 
                 // Применяем схему глобально ко всем контроллерам
                 c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
             });
-
 
             var app = builder.Build();
 
@@ -95,7 +109,7 @@ namespace RSpot.Users.API
 
             //app.UseHttpsRedirection();
 
-            // 4. Middleware: Auth!
+            // 5. Middleware: Auth!
             app.UseAuthentication();
             app.UseAuthorization();
 
