@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using RSpot.Booking.Infrastructure.Persistence;
+
 namespace RSpot.Booking.API
 {
     public class Program
@@ -13,6 +16,8 @@ namespace RSpot.Booking.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<BookingDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

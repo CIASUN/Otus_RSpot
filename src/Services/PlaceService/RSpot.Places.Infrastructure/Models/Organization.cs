@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Users.Domain.Models
+namespace RSpot.Places.Infrastructure.Models
 {
     public class Organization
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Users.Domain.Models
+namespace RSpot.Places.Infrastructure.Models
 {
     public class Workspace
     {
@@ -21,8 +21,6 @@ namespace RSpot.Users.Domain.Models
         public int Capacity { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-        public ICollection<WaitingList> WaitingLists { get; set; } = new List<WaitingList>();
     }
 
 }

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Users.Domain.Models
+namespace RSpot.Booking.Infrastructure.Models
 {
-    public class Booking
+    public class WaitingList
     {
+        public Guid Id { get; set; }
         public Guid WorkspaceId { get; set; }
         public Workspace Workspace { get; set; } = null!;
 
         public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
