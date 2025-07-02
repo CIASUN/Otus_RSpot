@@ -2,6 +2,7 @@
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using RSpot.Booking.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace RSpot.Booking.Infrastructure.Persistence
 {

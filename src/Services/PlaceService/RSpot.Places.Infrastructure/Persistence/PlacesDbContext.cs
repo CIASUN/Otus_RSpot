@@ -2,6 +2,7 @@
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using RSpot.Places.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace RSpot.Places.Infrastructure.Persistence
 {
