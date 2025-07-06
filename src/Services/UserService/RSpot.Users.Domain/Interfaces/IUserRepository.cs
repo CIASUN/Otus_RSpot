@@ -14,5 +14,6 @@ namespace RSpot.Users.Domain.Interfaces
         Task AddAsync(User user);
         Task<bool> ExistsByEmailAsync(string email);
         Task SaveChangesAsync();
+        Task CreateAsync(User user);
     }
 }

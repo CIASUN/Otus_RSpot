@@ -38,6 +38,12 @@ namespace RSpot.Users.Infrastructure.Persistence
 
         public async Task SaveChangesAsync() =>
             await _context.SaveChangesAsync();
+
+        public async Task CreateAsync(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }

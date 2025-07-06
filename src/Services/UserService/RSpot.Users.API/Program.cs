@@ -1,5 +1,4 @@
-
-namespace RSpot.Users.API
+п»їnamespace RSpot.Users.API
 {
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.IdentityModel.Tokens;
@@ -19,18 +18,24 @@ namespace RSpot.Users.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            // РћС‚РєР»СЋС‡Р°РµРј РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РёР· РєРѕРґР°, С‚.Рє. Р±Р°Р·Р° СЃРѕР·РґР°С‘С‚СЃСЏ SQL-СЃРєСЂРёРїС‚РѕРј РІ РєРѕРЅС‚РµР№РЅРµСЂРµ Postgres
+            var runDbInit = false; // builder.Configuration.GetValue<bool>("RunDbInit", true);
+
             builder.WebHost.UseUrls("http://0.0.0.0:80");
 
-            // 1. Настройки JWT из appsettings
+            // 1. РќР°СЃС‚СЂРѕР№РєРё JWT РёР· appsettings РёР»Рё РїРµСЂРµРјРµРЅРЅС‹С… РѕРєСЂСѓР¶РµРЅРёСЏ
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            Console.WriteLine($"[Config] JWT Secret starts with: {jwtSettings.Secret?.Substring(0, 5) ?? "<null>"}");
+            Console.WriteLine($"[Config] UsersDb = {builder.Configuration.GetConnectionString("UsersDb")}");
+
             var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
 
-            // 2. Подключаем сервис генерации токенов
+            // 2. РџРѕРґРєР»СЋС‡Р°РµРј СЃРµСЂРІРёСЃ РіРµРЅРµСЂР°С†РёРё С‚РѕРєРµРЅРѕРІ
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
-            // 3. Настраиваем JWT аутентификацию
+            // 3. РќР°СЃС‚СЂР°РёРІР°РµРј JWT Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёСЋ
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,7 +57,7 @@ namespace RSpot.Users.API
 
             builder.Services.AddAuthorization();
 
-            // 4. DI: EF Core + User сервисы и репозитории
+            // 4. DI: EF Core + User СЃРµСЂРІРёСЃС‹ Рё СЂРµРїРѕР·РёС‚РѕСЂРёРё
             builder.Services.AddDbContext<UsersDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("UsersDb")));
 
@@ -71,7 +76,6 @@ namespace RSpot.Users.API
                     Version = "v1"
                 });
 
-                // Добавляем JWT-схему авторизации
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -79,10 +83,9 @@ namespace RSpot.Users.API
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Description = "Введите JWT токен в формате: Bearer {токен}"
+                    Description = "Р’РІРµРґРёС‚Рµ JWT С‚РѕРєРµРЅ РІ С„РѕСЂРјР°С‚Рµ: Bearer {С‚РѕРєРµРЅ}"
                 });
 
-                // Применяем схему глобально ко всем контроллерам
                 c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
                 {
                     {
@@ -109,13 +112,27 @@ namespace RSpot.Users.API
 
             //app.UseHttpsRedirection();
 
-            // 5. Middleware: Auth!
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+
+            // ** РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕС‚РєР»СЋС‡РµРЅР° **
+            /*
+            if (runDbInit)
+            {
+                using var scope = app.Services.CreateScope();
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<UsersDbContext>();
+                var passwordHasher = services.GetRequiredService<IPasswordHasher<User>>();
+                var userRepo = services.GetRequiredService<IUserRepository>();
+
+                DbInitializer.Initialize(context, passwordHasher, userRepo);
+                Console.WriteLine("РЎРѕР·РґР°РЅРёРµ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° Р·Р°РІРµСЂС€РµРЅРѕ");
+            }
+            */
+
             app.Run();
         }
     }
-
 }

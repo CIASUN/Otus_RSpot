@@ -1,60 +1,69 @@
 services:
-  users.api:
-    build:
-      context: . 
-      dockerfile: src/Services/UserService/RSpot.Users.API/Dockerfile
-    ports:
-      - "5001:80"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__UsersDb=${USERS_DB_CONN}
-      - JwtSettings__Secret=${JWT_SECRET}
-      - RabbitMq__Host=${RABBIT_HOST}
-
-  places.api:
-    build:
-      context: .
-      dockerfile: src/Services/PlaceService/RSpot.Places.API/Dockerfile
-    ports:
-      - "5002:80"
-    environment:
-      - ConnectionStrings__PlacesDb=${PLACES_DB_CONN}
-      - JwtSettings__Secret=${JWT_SECRET}
-      - RabbitMq__Host=${RABBIT_HOST}
-
-  booking.api:
-    build:
-      context: .
-      dockerfile: src/Services/BookingService/RSpot.Booking.API/Dockerfile
-    ports:
-      - "5003:80"
-    environment:
-      - ConnectionStrings__BookingDb=${BOOKING_DB_CONN}
-      - JwtSettings__Secret=${JWT_SECRET}
-      - RabbitMq__Host=${RABBIT_HOST}
-
-  notification.worker:
-    build:
-      context: .
-      dockerfile: src/Services/NotificationService/RSpot.NotificationService/Dockerfile
-    depends_on:
-      - rabbitmq
-    environment:
-      - RabbitMq__Host=${RABBIT_HOST}
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
   postgres:
     image: postgres:14
+    container_name: rspot-postgres
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: rspot
+      POSTGRES_DB: rspot_users
     ports:
       - "5432:5432"
     volumes:
-      - ./db-init:/docker-entrypoint-initdb.d
+      - ./migrations:/docker-entrypoint-initdb.d
+
+  users_api:
+    build:
+      context: .
+      dockerfile: src/Services/UserService/RSpot.Users.API/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      RunDbInit: "false"
+      ASPNETCORE_ENVIRONMENT: Development
+      JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
+      JwtSettings__Issuer: RSpot
+      JwtSettings__Audience: RSpotUsers
+      JwtSettings__ExpiryMinutes: "60"
+      ConnectionStrings__UsersDb: Host=postgres;Port=5432;Database=rspot_users;Username=postgres;Password=example
+      RabbitMq__Host: rabbitmq
+    ports:
+      - "5001:80"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rspot-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+
+  booking_api:
+    build:
+      context: .
+      dockerfile: src/Services/BookingService/RSpot.Booking.API/Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5003:80"
+
+  places_api:
+    build:
+      context: .
+      dockerfile: src/Services/PlaceService/RSpot.Places.API/Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
+      JwtSettings__Issuer: RSpot
+      JwtSettings__Audience: RSpotUsers
+      JwtSettings__ExpiryMinutes: "60"
+      ConnectionStrings__UsersDb: Host=postgres;Port=5432;Database=rspot_users;Username=postgres;Password=example
+      RabbitMq__Host: rabbitmq
+    ports:
+      - "5002:80"
