@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Booking.Infrastructure", "src\Services\BookingService\RSpot.Booking.Infrastructure\RSpot.Booking.Infrastructure.csproj", "{C2198099-ABD9-4E1E-A179-A63FED7048C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSpot.Places.Domain", "src\Services\PlaceService\RSpot.Places.Domain\RSpot.Places.Domain.csproj", "{415567DF-CEEB-44E2-8026-0C22FE73F9A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2198099-ABD9-4E1E-A179-A63FED7048C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{415567DF-CEEB-44E2-8026-0C22FE73F9A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{415567DF-CEEB-44E2-8026-0C22FE73F9A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{415567DF-CEEB-44E2-8026-0C22FE73F9A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{415567DF-CEEB-44E2-8026-0C22FE73F9A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

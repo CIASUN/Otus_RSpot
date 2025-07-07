@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Places.Infrastructure.Models
+namespace RSpot.Places.Domain.Models
 {
     public class Workspace
     {

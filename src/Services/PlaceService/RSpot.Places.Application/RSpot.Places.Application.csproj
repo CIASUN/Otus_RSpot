@@ -12,4 +12,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RSpot.Places.Domain\RSpot.Places.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

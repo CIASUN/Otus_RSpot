@@ -27,3 +27,5 @@ logs
 # Docker
 # **/Dockerfile
 # **/docker-compose.yml
+pg-data
+mongo-data

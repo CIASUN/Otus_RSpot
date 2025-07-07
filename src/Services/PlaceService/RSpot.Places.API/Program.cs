@@ -1,11 +1,16 @@
 
 namespace RSpot.Places.API
 {
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.IdentityModel.Tokens;
     using System.Text;
-    using RSpot.Places.Application.Configuration; // Класс JwtSettings
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using MongoDB.Driver;
+    using RSpot.Places.Application.Configuration; // Класс JwtSettings
+    using RSpot.Places.Application.Interfaces;
+    using RSpot.Places.Infrastructure.Persistence;
+    using RSpot.Places.Infrastructure.Persistence.Configuration;
 
     public class Program
     {
@@ -38,6 +43,21 @@ namespace RSpot.Places.API
                 };
             });
 
+            // Mongo DB
+            builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoSettings"));
+
+            builder.Services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+                return new MongoClient(settings.ConnectionString);
+            });
+            builder.Services.AddScoped(sp =>
+            {
+                var mongoSettings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+                var client = sp.GetRequiredService<IMongoClient>();
+                return client.GetDatabase(mongoSettings.DatabaseName);
+            });
+
             builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
@@ -59,20 +79,22 @@ namespace RSpot.Places.API
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] { }
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
             });
+
+            builder.Services.AddScoped<IPlaceRepository, MongoPlaceRepository>();
 
             var app = builder.Build();
 
