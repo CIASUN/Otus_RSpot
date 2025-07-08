@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
-using RSpot.Booking.Infrastructure.Models;
+using RSpot.Booking.Domain.Models;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace RSpot.Booking.Infrastructure.Persistence
@@ -11,7 +11,7 @@ namespace RSpot.Booking.Infrastructure.Persistence
         public BookingDbContext(DbContextOptions<BookingDbContext> options)
             : base(options) { }
 
-        public DbSet<Models.Booking> Bookings { get; set; } = null!;
+        public DbSet<Domain.Models.Booking> Bookings { get; set; } = null!;
         public DbSet<WaitingList> WaitingLists { get; set; } = null!;
         public DbSet<Workspace> Workspaces { get; set; } = null!;
 
@@ -20,16 +20,16 @@ namespace RSpot.Booking.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
 
             // Booking — составной ключ
-            modelBuilder.Entity<Models.Booking>()
+            modelBuilder.Entity<Domain.Models.Booking>()
                 .HasKey(b => new { b.WorkspaceId, b.UserId, b.StartTime });
 
-            modelBuilder.Entity<Models.Booking>()
+            modelBuilder.Entity<Domain.Models.Booking>()
                 .HasOne(b => b.Workspace)
                 .WithMany(w => w.Bookings)
                 .HasForeignKey(b => b.WorkspaceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Models.Booking>()
+            modelBuilder.Entity<Domain.Models.Booking>()
                 .Property(b => b.UserId)
                 .IsRequired();
 

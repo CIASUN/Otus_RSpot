@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RSpot.Booking.Domain\RSpot.Booking.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
