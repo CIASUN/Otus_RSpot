@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Booking.Infrastructure.Models
+namespace RSpot.Booking.Domain.Models
 {
     public class Workspace
     {

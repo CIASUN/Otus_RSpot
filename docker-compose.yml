@@ -13,6 +13,19 @@ services:
       - ./migrations:/docker-entrypoint-initdb.d
       - ./pg-data:/var/lib/postgresql/data          # ← здесь будут храниться данные БД
       
+  booking_postgres:
+    image: postgres:14
+    container_name: rspot-booking-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: rspot_booking
+    ports:
+      - "5434:5432"  # Чтобы не пересекался с users
+    volumes:
+      - ./migrations/booking:/docker-entrypoint-initdb.d
+    
   mongodb:
     image: mongo
     container_name: rspot-mongodb
