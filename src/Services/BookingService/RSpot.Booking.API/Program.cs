@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RSpot.Booking.Application.Interfaces;
 using RSpot.Booking.Application.Configuration;
 using RSpot.Booking.Infrastructure.Persistence;
+using RSpot.Booking.Infrastructure.Authentication;
+
 using System.Text;
 
 namespace RSpot.Booking.API
@@ -48,6 +51,7 @@ namespace RSpot.Booking.API
             builder.Services.AddControllers();
 
             // Swagger + JWT
+            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {

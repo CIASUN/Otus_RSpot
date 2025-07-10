@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\RSpot.Booking.Application\RSpot.Booking.Application.csproj" />
     <ProjectReference Include="..\RSpot.Booking.Infrastructure\RSpot.Booking.Infrastructure.csproj" />
   </ItemGroup>

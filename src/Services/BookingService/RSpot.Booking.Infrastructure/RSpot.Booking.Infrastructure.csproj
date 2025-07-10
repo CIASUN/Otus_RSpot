@@ -16,11 +16,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.1" />
     <PackageReference Include="Microsoft.OData.Core" Version="8.2.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RSpot.Booking.Application\RSpot.Booking.Application.csproj" />
     <ProjectReference Include="..\RSpot.Booking.Domain\RSpot.Booking.Domain.csproj" />
   </ItemGroup>
 
