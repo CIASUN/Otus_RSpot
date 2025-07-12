@@ -20,7 +20,7 @@ namespace RSpot.Users.API.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            // 🟡 Заглушка. В реальности проверяй в базе
+            // 🟡 Заглушка. В реальности- по базе
             if (request.Email == "admin@example.com" && request.Password == "admin")
             {
                 var token = _jwtService.GenerateToken("admin-id", "Admin");
