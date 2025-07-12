@@ -1,7 +1,7 @@
-services:
-  postgres:
+services: 
+  postgres-users:
     image: postgres:14
-    container_name: rspot-postgres
+    container_name: postgres-users
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -11,24 +11,24 @@ services:
       - "5432:5432"
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
-      - ./pg-data:/var/lib/postgresql/data          # ← здесь будут храниться данные БД
-      
-  booking_postgres:
+      - ./pg-data:/var/lib/postgresql/data
+
+  postgres-booking:
     image: postgres:14
-    container_name: rspot-booking-postgres
+    container_name: postgres-booking
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: rspot_booking
     ports:
-      - "5434:5432"  # Чтобы не пересекался с users
+      - "5434:5432"
     volumes:
       - ./migrations/booking:/docker-entrypoint-initdb.d
-    
-  mongodb:
+
+  mongo-places:
     image: mongo
-    container_name: rspot-mongodb
+    container_name: mongo-places
     ports:
       - "27017:27017"
     volumes:
@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: src/Services/UserService/RSpot.Users.API/Dockerfile
     depends_on:
-      - postgres
+      - postgres-users
     environment:
       RunDbInit: "false"
       ASPNETCORE_ENVIRONMENT: Development
@@ -48,51 +48,58 @@ services:
       JwtSettings__Issuer: RSpot
       JwtSettings__Audience: RSpotUsers
       JwtSettings__ExpiryMinutes: "60"
-      ConnectionStrings__UsersDb: Host=postgres;Port=5432;Database=rspot_users;Username=postgres;Password=example
-      RabbitMq__Host: rabbitmq
+      ConnectionStrings__UsersDb: Host=postgres-users;Port=5432;Database=rspot_users;Username=postgres;Password=example
+      RabbitMq__Host: rabbitmq-rspot
     ports:
       - "5001:80"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rspot-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    restart: always
 
   booking_api:
     build:
       context: .
       dockerfile: src/Services/BookingService/RSpot.Booking.API/Dockerfile
     depends_on:
-      - postgres
-      - rabbitmq
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    ports:
-      - "5003:80"
-
-  places_api:
-    build:
-      context: .
-      dockerfile: src/Services/PlaceService/RSpot.Places.API/Dockerfile
-    depends_on:
-      - postgres
-      - rabbitmq
-      - mongodb
+      - postgres-booking
+      - rabbitmq-rspot
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
       JwtSettings__Issuer: RSpot
       JwtSettings__Audience: RSpotUsers
       JwtSettings__ExpiryMinutes: "60"
-      ConnectionStrings__UsersDb: Host=postgres;Port=5432;Database=rspot_users;Username=postgres;Password=example
-      RabbitMq__Host: rabbitmq
-      MongoSettings__ConnectionString: mongodb://mongodb:27017
+      ConnectionStrings__BookingDb: Host=postgres-booking;Port=5432;Database=rspot_booking;Username=postgres;Password=example
+      RabbitMq__Host: rabbitmq-rspot
+    ports:
+      - "5003:80"
+
+
+  places_api:
+    build:
+      context: .
+      dockerfile: src/Services/PlaceService/RSpot.Places.API/Dockerfile
+    depends_on:
+      - postgres-users
+      - rabbitmq-rspot
+      - mongo-places
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
+      JwtSettings__Issuer: RSpot
+      JwtSettings__Audience: RSpotUsers
+      JwtSettings__ExpiryMinutes: "60"
+      ConnectionStrings__UsersDb: Host=postgres-users;Port=5432;Database=rspot_users;Username=postgres;Password=example
+      RabbitMq__Host: rabbitmq-rspot
+      MongoSettings__ConnectionString: mongodb://mongo-places:27017
       MongoSettings__DatabaseName: rspot_places
     ports:
       - "5002:8080"
+
+  rabbitmq-rspot:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-rspot
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
 
 volumes:
   mongo_data:
