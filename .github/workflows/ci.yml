@@ -26,8 +26,8 @@ jobs:
 
     - name: Build & Run Tests
       run: |
-        dotnet build --configuration Release --no-restore
-        dotnet test --no-build --verbosity normal
+        dotnet test RSpot.sln --configuration Release --no-restore --verbosity normal
+
 
     - name: Build Users API image
       uses: docker/build-push-action@v4
