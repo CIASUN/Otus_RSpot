@@ -10,8 +10,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./migrations:/docker-entrypoint-initdb.d
-      - ./pg-data:/var/lib/postgresql/data
+      - ./migrations/users:/docker-entrypoint-initdb.d
+      - ./pg-data-users:/var/lib/postgresql/data
 
   postgres-booking:
     image: postgres:14
@@ -25,6 +25,7 @@ services:
       - "5434:5432"
     volumes:
       - ./migrations/booking:/docker-entrypoint-initdb.d
+      - ./pg-data-booking:/var/lib/postgresql/data
 
   mongo-places:
     image: mongo

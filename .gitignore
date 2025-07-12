@@ -29,3 +29,5 @@ logs
 # **/docker-compose.yml
 pg-data
 mongo-data
+pg-data-booking
+pg-data-users

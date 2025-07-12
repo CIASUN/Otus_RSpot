@@ -86,11 +86,11 @@ namespace RSpot.Booking.API
             var app = builder.Build();
 
             // Автоприменение миграции при старте
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<BookingDbContext>();
-                db.Database.Migrate();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetRequiredService<BookingDbContext>();
+            //    db.Database.Migrate();
+            //}
 
             // Middleware
             if (app.Environment.IsDevelopment())

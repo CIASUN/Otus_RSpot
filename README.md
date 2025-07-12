@@ -46,14 +46,4 @@
 
 ---
 
-## 🛠 Применение миграций (если миграции не применились автоматически)
-
-После того, как контейнеры поднялись и база данных готова, вручную примените миграции для UserService:
-
-```bash
-dotnet ef database update \
-  --project ./src/Services/UserService/RSpot.Users.Infrastructure \
-  --startup-project ./src/Services/UserService/RSpot.Users.API
-  
-Если команда dotnet ef не найдена, установите инструмент: dotnet tool install --global dotnet-ef
  
