@@ -32,7 +32,7 @@
                 issuer: _settings.Issuer,
                 audience: _settings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_settings.ExpiresInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes),
                 signingCredentials: credentials
             );
 

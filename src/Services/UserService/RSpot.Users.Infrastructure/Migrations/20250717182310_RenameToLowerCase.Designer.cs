@@ -12,8 +12,8 @@ using RSpot.Users.Infrastructure.Persistence;
 namespace RSpot.Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20250702064031_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250717182310_RenameToLowerCase")]
+    partial class RenameToLowerCase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,30 +29,36 @@ namespace RSpot.Users.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("role");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 #pragma warning restore 612, 618
         }

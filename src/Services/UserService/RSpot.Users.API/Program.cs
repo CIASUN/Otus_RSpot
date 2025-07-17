@@ -18,6 +18,19 @@
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Разрешаем CORS для фронтенда, например, http://localhost:5173
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
             // Отключаем инициализацию из кода, т.к. база создаётся SQL-скриптом в контейнере Postgres
             var runDbInit = false; // builder.Configuration.GetValue<bool>("RunDbInit", true);
 
@@ -110,7 +123,9 @@
                 app.UseSwaggerUI();
             }
 
-            //app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); //  не используе https
+
+            app.UseCors("AllowFrontend");
 
             app.UseAuthentication();
             app.UseAuthorization();

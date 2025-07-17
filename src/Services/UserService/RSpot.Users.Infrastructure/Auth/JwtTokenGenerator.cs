@@ -8,26 +8,29 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using RSpot.Users.Domain.Interfaces;
 using RSpot.Users.Domain.Models;
-using RSpot.Users.Application.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using RSpot.Users.Application.Configuration;
 
 namespace RSpot.Users.Infrastructure.Auth
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        private readonly JwtOptions _options;
+        private readonly JwtSettings _options;
 
-        public JwtTokenGenerator(IOptions<JwtOptions> opt)
+        public JwtTokenGenerator(IOptions<JwtSettings> opt)
         {
             _options = opt.Value;
+            Console.WriteLine($"[JwtTokenGenerator] Secret length: {_options.Secret?.Length ?? 0}");
+            Console.WriteLine($"[JwtTokenGenerator] Secret starts with: {_options.Secret?.Substring(0, Math.Min(10, _options.Secret.Length)) ?? "<null>"}");
         }
+
 
         public string GenerateToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.UtcNow.AddMinutes(_options.LifetimeMinutes);
+            var expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes);
 
             var claims = new[]
             {
