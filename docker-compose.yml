@@ -27,13 +27,14 @@ services:
       - ./migrations/booking:/docker-entrypoint-initdb.d
       - ./pg-data-booking:/var/lib/postgresql/data
 
-  mongo-places:
+  mongo-places: 
     image: mongo
     container_name: mongo-places
     ports:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data/db
+      - ./migrations/places/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     restart: always
 
   users_api:
