@@ -11,8 +11,8 @@ public class MongoPlaceRepository : IPlaceRepository
 
     public MongoPlaceRepository(IMongoDatabase database)
     {
-        _workspaces = database.GetCollection<Workspace>("Workspaces");
-        _organizations = database.GetCollection<Organization>("Organizations");
+        _workspaces = database.GetCollection<Workspace>("workspaces");
+        _organizations = database.GetCollection<Organization>("organizations");
     }
 
     public async Task<List<Workspace>> GetAllWorkspacesAsync() =>

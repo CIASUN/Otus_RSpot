@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace RSpot.Places.Domain.Models
 {
     public class Organization
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
 
+        [Required]
+        [BsonElement("name")]
+        public string Name { get; set; } = null!;
+
+        [BsonElement("ownerUserId")]
+        public string OwnerUserId { get; set; } = null!;
+
+        [BsonIgnore]
         public ICollection<Workspace> Workspaces { get; set; } = new List<Workspace>();
     }
-
 }
