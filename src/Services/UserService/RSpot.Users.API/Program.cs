@@ -12,10 +12,12 @@
     using RSpot.Users.Domain.Interfaces;
     using RSpot.Users.Infrastructure.Auth;
     using RSpot.Users.Infrastructure.Persistence;
+    using RSpot.Users.Infrastructure.Seed;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -117,6 +119,13 @@
 
             var app = builder.Build();
 
+            // Вызов сидера админа
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+                await DbSeeder.SeedAdminAsync(db);
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -131,21 +140,6 @@
             app.UseAuthorization();
 
             app.MapControllers();
-
-            // ** Инициализация отключена **
-            /*
-            if (runDbInit)
-            {
-                using var scope = app.Services.CreateScope();
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<UsersDbContext>();
-                var passwordHasher = services.GetRequiredService<IPasswordHasher<User>>();
-                var userRepo = services.GetRequiredService<IUserRepository>();
-
-                DbInitializer.Initialize(context, passwordHasher, userRepo);
-                Console.WriteLine("Создание администратора завершено");
-            }
-            */
 
             app.Run();
         }
