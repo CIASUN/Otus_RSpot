@@ -62,7 +62,8 @@ namespace RSpot.Booking.API
             builder.Services.AddDbContext<BookingDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("BookingDb")));
 
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
+            builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddControllers();
 

@@ -8,5 +8,7 @@ namespace RSpot.Booking.Application.DTOs
         public Guid WorkspaceId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        public WorkspaceDto? Workspace { get; set; }
     }
 }

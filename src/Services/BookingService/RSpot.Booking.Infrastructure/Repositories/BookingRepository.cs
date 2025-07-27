@@ -26,4 +26,10 @@ public class BookingRepository : IBookingRepository
             .ToListAsync();
     }
 
+    public async Task AddAsync(RSpot.Booking.Domain.Models.Booking booking)
+    {
+        _context.Bookings.Add(booking);
+        await _context.SaveChangesAsync();
+    }
+
 }

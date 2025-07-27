@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS booking (
     workspace_id UUID NOT NULL,
     user_id UUID NOT NULL,
     start_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    CONSTRAINT fk_booking_workspace FOREIGN KEY(workspace_id) REFERENCES workspace(id) ON DELETE CASCADE
+    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
 -- Таблица WaitingList
