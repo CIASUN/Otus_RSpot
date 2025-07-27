@@ -71,7 +71,7 @@ services:
       ConnectionStrings__BookingDb: Host=postgres-booking;Port=5432;Database=rspot_booking;Username=postgres;Password=example
       RabbitMq__Host: rabbitmq-rspot
     ports:
-      - "5003:80"
+      - "5003:8080"
 
 
   places_api:

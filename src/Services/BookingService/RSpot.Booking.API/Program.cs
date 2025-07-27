@@ -8,6 +8,7 @@ using RSpot.Booking.Infrastructure.Persistence;
 using RSpot.Booking.Infrastructure.Authentication;
 
 using System.Text;
+using RSpot.Booking.Application.Services;
 
 namespace RSpot.Booking.API
 {
@@ -48,6 +49,8 @@ namespace RSpot.Booking.API
             builder.Services.AddDbContext<BookingDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("BookingDb")));
 
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddControllers();
 
             // Swagger + JWT
