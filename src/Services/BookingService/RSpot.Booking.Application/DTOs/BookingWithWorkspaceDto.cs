@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSpot.Booking.Domain.Models
+namespace RSpot.Booking.Application.DTOs
 {
-    public class WaitingList
+    public class BookingWithWorkspaceDto
     {
         public Guid Id { get; set; }
 
@@ -17,6 +17,8 @@ namespace RSpot.Booking.Domain.Models
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
+
+        public WorkspaceDto Workspace { get; set; } = null!;
     }
 
 }

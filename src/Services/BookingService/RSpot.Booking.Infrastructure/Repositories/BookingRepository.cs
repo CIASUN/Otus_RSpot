@@ -21,7 +21,6 @@ public class BookingRepository : IBookingRepository
             throw new ArgumentException("Invalid userId format", nameof(userId));
 
         return await _context.Bookings
-            .Include(b => b.Workspace) // если нужно получить название или описание площадки
             .Where(b => b.UserId == userGuid)
             .OrderByDescending(b => b.StartTime)
             .ToListAsync();

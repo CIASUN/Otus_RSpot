@@ -18,6 +18,7 @@ namespace RSpot.Booking.Application.Services
             return bookings.Select(b => new BookingDto
             {
                 Id = b.Id,
+                Userid = b.UserId,
                 WorkspaceId = b.WorkspaceId,
                 StartTime = b.StartTime,
                 EndTime = b.EndTime

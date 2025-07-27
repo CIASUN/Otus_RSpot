@@ -18,6 +18,15 @@ namespace RSpot.Places.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy => policy
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
             // Конфигурация JWT из appsettings.json
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
@@ -105,7 +114,7 @@ namespace RSpot.Places.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
 

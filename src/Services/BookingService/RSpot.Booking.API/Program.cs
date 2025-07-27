@@ -9,6 +9,7 @@ using RSpot.Booking.Infrastructure.Authentication;
 
 using System.Text;
 using RSpot.Booking.Application.Services;
+using RSpot.Booking.Infrastructure.Repositories;
 
 namespace RSpot.Booking.API
 {
@@ -17,6 +18,18 @@ namespace RSpot.Booking.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Разрешаем CORS для фронтенда, например, http://localhost:5173
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
 
             // Конфигурация JWT из appsettings.json
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -103,7 +116,7 @@ namespace RSpot.Booking.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
 
