@@ -70,6 +70,8 @@ services:
       JwtSettings__ExpiryMinutes: "60"
       ConnectionStrings__BookingDb: Host=postgres-booking;Port=5432;Database=rspot_booking;Username=postgres;Password=example
       RabbitMq__Host: rabbitmq-rspot
+      MongoSettings__ConnectionString: mongodb://mongo-places:27017
+      MongoSettings__DatabaseName: rspot_places
     ports:
       - "5003:8080"
 

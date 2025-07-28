@@ -10,6 +10,9 @@ using RSpot.Booking.Infrastructure.Authentication;
 using System.Text;
 using RSpot.Booking.Application.Services;
 using RSpot.Booking.Infrastructure.Repositories;
+using MongoDB.Driver;
+using RSpot.Booking.Infrastructure.Persistence.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace RSpot.Booking.API
 {
@@ -58,9 +61,24 @@ namespace RSpot.Booking.API
 
             builder.Services.AddAuthorization();
 
-            // ад
+            // PG ад
             builder.Services.AddDbContext<BookingDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("BookingDb")));
+
+            // Mongo DB
+            builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoSettings"));
+
+            builder.Services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+                return new MongoClient(settings.ConnectionString);
+            });
+            builder.Services.AddScoped(sp =>
+            {
+                var mongoSettings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+                var client = sp.GetRequiredService<IMongoClient>();
+                return client.GetDatabase(mongoSettings.DatabaseName);
+            });
 
             builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
             builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();

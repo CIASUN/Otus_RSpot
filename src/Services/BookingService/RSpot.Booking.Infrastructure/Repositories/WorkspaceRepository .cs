@@ -16,27 +16,28 @@ namespace RSpot.Booking.Infrastructure.Repositories
 
         public WorkspaceRepository(IMongoDatabase database)
         {
-            _collection = database.GetCollection<Workspace>("workspace");
+            _collection = database.GetCollection<Workspace>("workspaces");
         }
 
         public async Task<WorkspaceDto?> GetByIdAsync(Guid id)
         {
-            var workspace = await _collection.Find(w => w.Id == id).FirstOrDefaultAsync();
+            var idString = id.ToString();
+
+            var workspace = await _collection
+                .Find(w => w.Id == idString)
+                .FirstOrDefaultAsync();
+
             if (workspace == null) return null;
 
-            return new RSpot.Booking.Application.DTOs.WorkspaceDto
+            return new WorkspaceDto
             {
-                Id = workspace.Id,
+                Id = Guid.Parse(workspace.Id),
                 Name = workspace.Name,
                 Organization_id = workspace.OrganizationId,
                 Location = workspace.Location
-                //Capacity = workspace.Capacity,
-                //Floor = workspace.Floor,
-                //HasSocket = workspace.HasSocket,
-                //IsQuietZone = workspace.IsQuietZone,
-                //Description = workspace.Description
             };
         }
+
 
     }
 

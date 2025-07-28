@@ -8,8 +8,7 @@ namespace RSpot.Booking.Domain.Models
     public class Workspace
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        public Guid Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [BsonRepresentation(BsonType.String)]
         [BsonElement("organizationId")]
@@ -22,20 +21,20 @@ namespace RSpot.Booking.Domain.Models
         [BsonElement("location")]
         public string Location { get; set; } = null!;
 
-        //[BsonElement("capacity")]
-        //[Range(1, 100)]
-        //public int Capacity { get; set; }
+        [BsonElement("capacity")]
+        [Range(1, 100)]
+        public int Capacity { get; set; }
 
-        //[BsonElement("floor")]
-        //public int Floor { get; set; }
+        [BsonElement("floor")]
+        public int Floor { get; set; }
 
-        //[BsonElement("hasSocket")]
-        //public bool HasSocket { get; set; }
+        [BsonElement("hasSocket")]
+        public bool HasSocket { get; set; }
 
-        //[BsonElement("isQuietZone")]
-        //public bool IsQuietZone { get; set; }
+        [BsonElement("isQuietZone")]
+        public bool IsQuietZone { get; set; }
 
-        //[BsonElement("description")]
-        //public string? Description { get; set; }
+        [BsonElement("description")]
+        public string? Description { get; set; }
     }
 }
