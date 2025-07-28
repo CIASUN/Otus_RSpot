@@ -27,7 +27,7 @@ namespace RSpot.Booking.Application.Services
                 result.Add(new BookingDto
                 {
                     Id = booking.Id,
-                    Userid = booking.UserId,
+                    UserId = booking.UserId,
                     WorkspaceId = booking.WorkspaceId,
                     StartTime = booking.StartTime,
                     EndTime = booking.EndTime,
@@ -38,7 +38,8 @@ namespace RSpot.Booking.Application.Services
             return result;
         }
 
-        public async Task CreateBookingAsync(string userId, CreateBookingRequest request)
+
+        public async Task<BookingDto> CreateBookingAsync(string userId, CreateBookingRequest request)
         {
             if (!Guid.TryParse(userId, out var parsedUserId))
                 throw new ArgumentException("Некорректный формат UserId");
@@ -51,11 +52,21 @@ namespace RSpot.Booking.Application.Services
                 Id = Guid.NewGuid(),
                 UserId = parsedUserId,
                 WorkspaceId = parsedWorkspaceId,
-                StartTime = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc),
-                EndTime = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc)
+                StartTime = request.StartTime,
+                EndTime = request.EndTime
             };
 
             await _bookingRepository.AddAsync(booking);
+
+            return new BookingDto
+            {
+                Id = booking.Id,
+                UserId = booking.UserId,
+                WorkspaceId = booking.WorkspaceId,
+                StartTime = booking.StartTime,
+                EndTime = booking.EndTime
+            };
         }
+
     }
 }

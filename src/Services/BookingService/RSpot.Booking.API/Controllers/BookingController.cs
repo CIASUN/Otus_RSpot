@@ -13,10 +13,12 @@ namespace RSpot.Booking.API.Controllers;
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
+    private readonly IBookingEventPublisher _eventPublisher;
 
-    public BookingController(IBookingService bookingService)
+    public BookingController(IBookingService bookingService, IBookingEventPublisher eventPublisher)
     {
         _bookingService = bookingService;
+        _eventPublisher = eventPublisher;
     }
 
     /// <summary>
@@ -52,7 +54,16 @@ public class BookingController : ControllerBase
 
         try
         {
-            await _bookingService.CreateBookingAsync(userId, request);
+            var booking = await _bookingService.CreateBookingAsync(userId, request);
+
+            await _eventPublisher.PublishBookingCreatedAsync(
+                booking.Id.ToString(),
+                booking.UserId.ToString(),
+                booking.WorkspaceId,
+                booking.StartTime,
+                booking.EndTime
+            );
+
             return Ok(new { message = "Бронирование успешно создано" });
         }
         catch (Exception ex)

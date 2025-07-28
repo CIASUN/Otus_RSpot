@@ -13,6 +13,7 @@ using RSpot.Booking.Infrastructure.Repositories;
 using MongoDB.Driver;
 using RSpot.Booking.Infrastructure.Persistence.Configuration;
 using Microsoft.Extensions.Options;
+using RSpot.Booking.Infrastructure.Messaging;
 
 namespace RSpot.Booking.API
 {
@@ -83,6 +84,8 @@ namespace RSpot.Booking.API
             builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
             builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddSingleton<IBookingEventPublisher, BookingEventPublisher>();
+
             builder.Services.AddControllers();
 
             // Swagger + JWT
