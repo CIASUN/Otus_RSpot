@@ -47,6 +47,9 @@ namespace RSpot.Booking.Application.Services
             if (!Guid.TryParse(request.WorkspaceId, out var parsedWorkspaceId))
                 throw new ArgumentException("Некорректный формат WorkspaceId");
 
+            request.StartTime = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc);
+            request.EndTime = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc);
+
             var booking = new RSpot.Booking.Domain.Models.Booking
             {
                 Id = Guid.NewGuid(),
