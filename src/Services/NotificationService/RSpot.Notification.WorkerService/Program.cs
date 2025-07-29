@@ -9,10 +9,10 @@ namespace RSpot.Notification.WorkerService
         public static void Main(string[] args)
         {
             // Настройка Serilog ДО создания builder
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // менее подробный лог от Microsoft
-                .MinimumLevel.Information()                                // по умолчанию логировать начиная с Info
-                .Enrich.FromLogContext()                                   // добавляет полезные поля (например, RequestId)
+              Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Information()                               
+                .Enrich.FromLogContext()                                   
                 .Enrich.WithMachineName()
                 .Enrich.WithThreadId()
                 .WriteTo.Console(
@@ -28,12 +28,8 @@ namespace RSpot.Notification.WorkerService
 
                 var builder = Host.CreateApplicationBuilder(args);
 
-                builder.Services.AddLogging(loggingBuilder =>
-                {
-                    loggingBuilder.ClearProviders();
-                    loggingBuilder.AddSerilog();
-                });
-
+                builder.Logging.ClearProviders();
+                builder.Logging.AddSerilog(Log.Logger);
                 builder.Services.AddHostedService<BookingCreatedConsumer>();
 
                 var host = builder.Build();

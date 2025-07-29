@@ -21,7 +21,6 @@ public class BookingCreatedConsumer : BackgroundService
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        // Обязательно объявляем очередь!
         _channel.QueueDeclare(
             queue: "booking-created",
             durable: false,
@@ -33,7 +32,7 @@ public class BookingCreatedConsumer : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("✅ NotificationService слушает очередь booking-created...");
+        _logger.LogInformation("NotificationService слушает очередь booking-created...");
 
         var consumer = new EventingBasicConsumer(_channel);
 
@@ -43,25 +42,24 @@ public class BookingCreatedConsumer : BackgroundService
             {
                 var body = ea.Body.ToArray();
                 var json = Encoding.UTF8.GetString(body);
+                Console.WriteLine("===> RAW JSON: " + json);
                 var booking = JsonSerializer.Deserialize<BookingCreatedMessage>(json);
 
                 if (booking != null)
                 {
                     _logger.LogInformation(
-                        "📨 Получено событие: BookingId={BookingId}, UserId={UserId}, WorkspaceId={WorkspaceId}, Start={Start}, End={End}",
+                        "Получено событие: BookingId={BookingId}, UserId={UserId}, WorkspaceId={WorkspaceId}, Start={Start}, End={End}",
                         booking.BookingId,
                         booking.UserId,
                         booking.WorkspaceId,
                         booking.StartTime,
                         booking.EndTime
                     );
-
-                    // TODO: отправить email, push или другое уведомление
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Ошибка при обработке события BookingCreated");
+                _logger.LogError(ex, "Ошибка при обработке события BookingCreated");
             }
         };
 
