@@ -6,7 +6,6 @@ using RSpot.Booking.Application.Interfaces;
 using RSpot.Booking.Application.Configuration;
 using RSpot.Booking.Infrastructure.Persistence;
 using RSpot.Booking.Infrastructure.Authentication;
-
 using System.Text;
 using RSpot.Booking.Application.Services;
 using RSpot.Booking.Infrastructure.Repositories;
@@ -14,6 +13,8 @@ using MongoDB.Driver;
 using RSpot.Booking.Infrastructure.Persistence.Configuration;
 using Microsoft.Extensions.Options;
 using RSpot.Booking.Infrastructure.Messaging;
+using RSpot.Booking.API.Middleware;
+using Serilog;
 
 namespace RSpot.Booking.API
 {
@@ -22,6 +23,15 @@ namespace RSpot.Booking.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/booking-log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             // Разрешаем CORS для фронтенда, например, http://localhost:5173
             builder.Services.AddCors(options =>
@@ -122,6 +132,8 @@ namespace RSpot.Booking.API
             });
 
             var app = builder.Build();
+
+            app.UseRequestLogging();
 
             // Автоприменение миграции при старте
             //using (var scope = app.Services.CreateScope())

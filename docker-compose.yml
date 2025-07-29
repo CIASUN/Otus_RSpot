@@ -74,6 +74,13 @@ services:
       MongoSettings__DatabaseName: rspot_places
     ports:
       - "5003:8080"
+    volumes:
+      - ./logs/booking:/app/Logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
       
   notification_worker:
     build:
