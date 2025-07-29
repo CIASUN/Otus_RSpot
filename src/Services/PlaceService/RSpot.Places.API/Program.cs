@@ -17,12 +17,13 @@ namespace RSpot.Places.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? "http://localhost:5173";
 
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend",
                     policy => policy
-                        .WithOrigins("http://localhost:5173")
+                        .WithOrigins(frontendUrl)
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });

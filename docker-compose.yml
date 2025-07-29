@@ -52,6 +52,7 @@ services:
       JwtSettings__ExpiryMinutes: "60"
       ConnectionStrings__UsersDb: Host=postgres-users;Port=5432;Database=rspot_users;Username=postgres;Password=example
       RabbitMq__Host: rabbitmq-rspot
+      FrontendUrl: "http://frontend:80"
     ports:
       - "5001:80"
 
@@ -72,6 +73,7 @@ services:
       RabbitMq__Host: rabbitmq-rspot
       MongoSettings__ConnectionString: mongodb://mongo-places:27017
       MongoSettings__DatabaseName: rspot_places
+      FrontendUrl: "http://frontend:80"
     ports:
       - "5003:8080"
     volumes:
@@ -81,7 +83,7 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
-      
+
   notification_worker:
     build:
       context: .
@@ -96,9 +98,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"      # максимум 10 МБ на файл
-        max-file: "5"        # максимум 5 файлов (то есть ~50 МБ)
-
+        max-size: "10m"
+        max-file: "5"
 
   places_api:
     build:
@@ -130,5 +131,10 @@ services:
       - "15672:15672"
     restart: always
 
-volumes:
-  mongo_data:
+  frontend:
+    build:
+      context: ../rspot-frontend  
+      dockerfile: Dockerfile      
+    ports:
+      - "5173:80"                 
+    restart: always
