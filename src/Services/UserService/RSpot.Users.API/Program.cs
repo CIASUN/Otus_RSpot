@@ -81,6 +81,28 @@
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+            // ПОДКЛЮЧЕНИЕ К БАЗЕ С RETRY  on_depend в docker-compose есть, он дает гарантию что контейнер есть, но БД в нем еще не доступна, и нужно как далее сделано, без отого не работало.
+            var maxRetries = 10;
+            var delaySeconds = 5;
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
+            {
+                try
+                {
+                    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+                    var db = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+                    db.Database.EnsureCreated(); // или db.Database.CanConnect() / Migrate()
+                    Console.WriteLine($"[Startup] Successfully connected to UsersDb on attempt {attempt}");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Startup] Failed to connect to UsersDb (attempt {attempt}/{maxRetries}): {ex.Message}");
+                    if (attempt == maxRetries) throw; // бросаем исключение, если не смогли после всех попыток
+                    Thread.Sleep(delaySeconds * 1000);
+                }
+            }
+
             // Swagger + API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
