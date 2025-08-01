@@ -7,12 +7,10 @@ namespace RSpot.Places.Domain.Models
     public class Workspace
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        public Guid Id { get; set; }
+        public string Id { get; set; } = null!;
 
-        [BsonRepresentation(BsonType.String)]
         [BsonElement("organizationId")]
-        public Guid OrganizationId { get; set; }
+        public string OrganizationId { get; set; } = null!;
 
         [BsonIgnore]
         public Organization Organization { get; set; } = null!;

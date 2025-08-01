@@ -4,17 +4,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RSpot.Booking.Application.Interfaces;
 using RSpot.Booking.Application.Configuration;
-using RSpot.Booking.Infrastructure.Persistence;
 using RSpot.Booking.Infrastructure.Authentication;
-using System.Text;
-using RSpot.Booking.Application.Services;
-using RSpot.Booking.Infrastructure.Repositories;
-using MongoDB.Driver;
-using RSpot.Booking.Infrastructure.Persistence.Configuration;
-using Microsoft.Extensions.Options;
 using RSpot.Booking.Infrastructure.Messaging;
+using RSpot.Booking.Infrastructure.Persistence;
+using RSpot.Booking.Infrastructure.Repositories;
 using RSpot.Booking.API.Middleware;
 using Serilog;
+using System.Text;
+using RSpot.Booking.Application.Services;
 
 namespace RSpot.Booking.API
 {
@@ -24,34 +21,32 @@ namespace RSpot.Booking.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Logging
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.File("Logs/booking-log.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
-
             builder.Host.UseSerilog();
 
+            // CORS
             var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? "http://localhost:5173";
-
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowFrontend",
-                    policy =>
-                    {
-                        policy.WithOrigins(frontendUrl)
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins(frontendUrl)
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
             });
 
-            // Конфигурация JWT из appsettings.json
+            // JWT
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
             var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
 
-            // Добавляем аутентификацию JWT
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,34 +68,27 @@ namespace RSpot.Booking.API
 
             builder.Services.AddAuthorization();
 
-            // PG БД
+            // PostgreSQL
             builder.Services.AddDbContext<BookingDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("BookingDb")));
 
-            // Mongo DB
-            builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoSettings"));
-
-            builder.Services.AddSingleton<IMongoClient>(sp =>
-            {
-                var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
-                return new MongoClient(settings.ConnectionString);
-            });
-            builder.Services.AddScoped(sp =>
-            {
-                var mongoSettings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
-                var client = sp.GetRequiredService<IMongoClient>();
-                return client.GetDatabase(mongoSettings.DatabaseName);
-            });
-
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
-            builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+            // Repositories & Services
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddSingleton<IBookingEventPublisher, BookingEventPublisher>();
 
+            // HttpClient для PlaceService
+            builder.Services.AddHttpClient("PlaceService", client =>
+            {
+                client.BaseAddress = new Uri("http://places_api:8080");
+            });
+
+            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+            // Controllers
             builder.Services.AddControllers();
 
-            // Swagger + JWT
-            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            // Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -132,18 +120,11 @@ namespace RSpot.Booking.API
                 });
             });
 
+            // App
             var app = builder.Build();
 
             app.UseRequestLogging();
 
-            // Автоприменение миграции при старте
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var db = scope.ServiceProvider.GetRequiredService<BookingDbContext>();
-            //    db.Database.Migrate();
-            //}
-
-            // Middleware
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

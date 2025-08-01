@@ -33,7 +33,7 @@ namespace RSpot.Booking.Infrastructure.Repositories
             {
                 Id = Guid.Parse(workspace.Id),
                 Name = workspace.Name,
-                Organization_id = workspace.OrganizationId,
+                OrganizationId = workspace.OrganizationId,
                 Location = workspace.Location
             };
         }

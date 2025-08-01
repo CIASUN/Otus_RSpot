@@ -11,7 +11,7 @@
     {
         Task<List<Workspace>> GetAllWorkspacesAsync();
         Task<List<Organization>> GetAllOrganizationsAsync();
-
+        Task<Workspace?> GetWorkspaceByIdAsync(string id);
         Task AddWorkspaceAsync(Workspace workspace);
         Task AddOrganizationAsync(Organization organization);
     }

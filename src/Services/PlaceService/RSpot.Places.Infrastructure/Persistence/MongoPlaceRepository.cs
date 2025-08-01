@@ -1,6 +1,8 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using RSpot.Places.Application.Interfaces;
 using RSpot.Places.Domain.Models;
+using MongoDB.Bson;
 
 namespace RSpot.Places.Infrastructure.Persistence;
 
@@ -26,4 +28,10 @@ public class MongoPlaceRepository : IPlaceRepository
 
     public async Task AddOrganizationAsync(Organization organization) =>
         await _organizations.InsertOneAsync(organization);
+
+    public async Task<Workspace?> GetWorkspaceByIdAsync(string id)
+    {
+        var filter = Builders<Workspace>.Filter.Eq(w => w.Id, id);
+        return await _workspaces.Find(filter).FirstOrDefaultAsync();
+    }
 }

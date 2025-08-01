@@ -28,7 +28,7 @@ namespace RSpot.Places.Tests
             {
                 new Workspace
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Title = "Test Workspace",
                     Floor = 3,
                     HasSocket = true,

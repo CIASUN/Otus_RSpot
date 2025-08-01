@@ -35,6 +35,8 @@ Middleware логирование запросов (BookingService)
 
 ASP.NET Core(.NET 8) EF Core
 
+Tests Xunit (UserService, PlacesServise, BookingService)
+
 ## 🚀 Быстрый запуск
 
 1. Установи зависимости:  

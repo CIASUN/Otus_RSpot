@@ -42,4 +42,14 @@ public class PlaceController : ControllerBase
         await _placeRepository.AddOrganizationAsync(organization);
         return Ok();
     }
+
+    [HttpGet("workspaces/{id}")]
+    public async Task<ActionResult<Workspace>> GetWorkspaceById(string id)
+    {
+        var workspace = await _placeRepository.GetWorkspaceByIdAsync(id);
+        if (workspace == null)
+            return NotFound();
+
+        return Ok(workspace);
+    }
 }

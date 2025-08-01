@@ -1,28 +1,30 @@
 ﻿using RSpot.Booking.Application.Interfaces;
 using RSpot.Booking.Application.DTOs;
 using RSpot.Booking.Domain.Models;
+using System.Net.Http.Json;
+using System.Net.Http;
 
 namespace RSpot.Booking.Application.Services
 {
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly IWorkspaceRepository _workspaceRepository;
+        private readonly HttpClient _httpClient;
 
-        public BookingService(IBookingRepository bookingRepository, IWorkspaceRepository workspaceRepository)
+        public BookingService(IBookingRepository bookingRepository, IHttpClientFactory httpClientFactory)
         {
             _bookingRepository = bookingRepository;
-            _workspaceRepository = workspaceRepository;
+            _httpClient = httpClientFactory.CreateClient("PlaceService");
         }
 
         public async Task<IEnumerable<BookingDto>> GetBookingsForUserAsync(string userId)
         {
             var bookings = await _bookingRepository.GetByUserIdAsync(userId);
-
             var result = new List<BookingDto>();
+
             foreach (var booking in bookings)
             {
-                var workspace = await _workspaceRepository.GetByIdAsync(booking.WorkspaceId);
+                var workspace = await GetWorkspaceFromPlaceServiceAsync(booking.WorkspaceId.ToString());
 
                 result.Add(new BookingDto
                 {
@@ -38,6 +40,19 @@ namespace RSpot.Booking.Application.Services
             return result;
         }
 
+        private async Task<WorkspaceDto?> GetWorkspaceFromPlaceServiceAsync(string workspaceId)
+        {
+            var response = await _httpClient.GetAsync($"/api/place/workspaces/{workspaceId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadFromJsonAsync<WorkspaceDto>();
+                return content;
+            }
+
+            // Логгирование ошибки можно добавить
+            return null;
+        }
 
         public async Task<BookingDto> CreateBookingAsync(string userId, CreateBookingRequest request)
         {
