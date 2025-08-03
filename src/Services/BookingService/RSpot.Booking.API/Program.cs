@@ -118,6 +118,7 @@ namespace RSpot.Booking.API
                         new string[] { }
                     }
                 });
+                c.EnableAnnotations();
             });
 
             // App

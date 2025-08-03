@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RSpot.Booking.Application.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RSpot.Booking.API.Controllers
 {
@@ -15,8 +16,16 @@ namespace RSpot.Booking.API.Controllers
             _tokenGenerator = tokenGenerator;
         }
 
-        // Получение тестового JWT токена (для тестирования)
+        /// <summary>
+        /// Получение тестового JWT токена (для тестирования)
+        /// </summary>
+        /// <returns>JWT токен</returns>
         [HttpGet("token")]
+        [SwaggerOperation(
+            Summary = "Получить тестовый JWT токен",
+            Description = "Генерирует JWT токен для тестового пользователя (без реальной проверки)"
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetToken()
         {
             // В реальном приложении — здесь будет проверка пользователя и пароля
@@ -24,9 +33,18 @@ namespace RSpot.Booking.API.Controllers
             return Ok(new { token });
         }
 
-        // Защищённый эндпоинт, доступен только с валидным JWT
+        /// <summary>
+        /// Защищённый эндпоинт, доступный только с валидным JWT
+        /// </summary>
+        /// <returns>Приветственное сообщение для аутентифицированного пользователя</returns>
         [Authorize]
         [HttpGet("secure")]
+        [SwaggerOperation(
+            Summary = "Защищённый эндпоинт",
+            Description = "Возвращает приветственное сообщение для аутентифицированного пользователя"
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Secure()
         {
             var userName = User.Identity?.Name ?? "anonymous";

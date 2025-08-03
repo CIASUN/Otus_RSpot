@@ -3,10 +3,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RSpot.Users.Application.Services.Interfaces;
 using RSpot.Users.Application.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RSpot.Users.API.Controllers
 {
-
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
@@ -19,6 +19,8 @@ namespace RSpot.Users.API.Controllers
         }
 
         [HttpPost("register")]
+        [SwaggerOperation(Summary = "Регистрация нового пользователя", Description = "Создает пользователя по переданным данным")]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _userService.RegisterAsync(request);
@@ -26,6 +28,8 @@ namespace RSpot.Users.API.Controllers
         }
 
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "Аутентификация пользователя", Description = "Логин и получение JWT токена")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _userService.LoginAsync(request);
@@ -34,6 +38,9 @@ namespace RSpot.Users.API.Controllers
 
         [Authorize]
         [HttpGet("me")]
+        [SwaggerOperation(Summary = "Получить текущего пользователя", Description = "Возвращает данные аутентифицированного пользователя")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> Me()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

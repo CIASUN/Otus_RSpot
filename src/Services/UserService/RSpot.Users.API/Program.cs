@@ -138,6 +138,7 @@
                         new string[] {}
                     }
                 });
+                c.EnableAnnotations();
             });
 
             var app = builder.Build();
