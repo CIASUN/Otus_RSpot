@@ -52,4 +52,13 @@ public class PlaceController : ControllerBase
 
         return Ok(workspace);
     }
+
+    [HttpDelete("workspaces/{id}")]
+    public async Task<IActionResult> DeleteWorkspace(string id)
+    {
+        await _placeRepository.DeleteWorkspaceAsync(id);
+        return NoContent();
+    }
+
+
 }

@@ -14,5 +14,6 @@
         Task<Workspace?> GetWorkspaceByIdAsync(string id);
         Task AddWorkspaceAsync(Workspace workspace);
         Task AddOrganizationAsync(Organization organization);
+        Task DeleteWorkspaceAsync(string id);
     }
 }

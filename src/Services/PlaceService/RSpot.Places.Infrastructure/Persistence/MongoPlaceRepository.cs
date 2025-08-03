@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using RSpot.Places.Application.Interfaces;
 using RSpot.Places.Domain.Models;
 using MongoDB.Bson;
+using Microsoft.EntityFrameworkCore;
 
 namespace RSpot.Places.Infrastructure.Persistence;
 
@@ -34,4 +35,11 @@ public class MongoPlaceRepository : IPlaceRepository
         var filter = Builders<Workspace>.Filter.Eq(w => w.Id, id);
         return await _workspaces.Find(filter).FirstOrDefaultAsync();
     }
+    public async Task DeleteWorkspaceAsync(string id)
+    {
+        var filter = Builders<Workspace>.Filter.Eq(w => w.Id, id);
+        await _workspaces.DeleteOneAsync(filter);
+    }
+
+
 }
