@@ -13,7 +13,7 @@ namespace RSpot.Places.Domain.Models
         public string OrganizationId { get; set; } = null!;
 
         [BsonIgnore]
-        public Organization Organization { get; set; } = null!;
+        public Organization? Organization { get; set; } = null!;
 
         [Required]
         [BsonElement("name")]
