@@ -7,11 +7,14 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: rspot_users
+      TZ: Europe/Moscow
     ports:
       - "5432:5432"
     volumes:
       - ./migrations/users:/docker-entrypoint-initdb.d
       - ./pg-data-users:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   postgres-booking:
     image: postgres:14
@@ -21,11 +24,14 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: rspot_booking
+      TZ: Europe/Moscow
     ports:
       - "5434:5432"
     volumes:
       - ./migrations/booking:/docker-entrypoint-initdb.d
       - ./pg-data-booking:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   mongo-places: 
     image: mongo
@@ -35,7 +41,11 @@ services:
     volumes:
       - ./mongo-data:/data/db
       - ./migrations/places/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     restart: always
+    environment:
+      TZ: Europe/Moscow
 
   users_api:
     build:
@@ -44,6 +54,7 @@ services:
     depends_on:
       - postgres-users
     environment:
+      TZ: Europe/Moscow
       RunDbInit: "false"
       ASPNETCORE_ENVIRONMENT: Development
       JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
@@ -55,6 +66,9 @@ services:
       FrontendUrl: "http://localhost:5173"
     ports:
       - "5001:80"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   booking_api:
     build:
@@ -64,6 +78,7 @@ services:
       - postgres-booking
       - rabbitmq-rspot
     environment:
+      TZ: Europe/Moscow
       ASPNETCORE_ENVIRONMENT: Development
       JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
       JwtSettings__Issuer: RSpot
@@ -78,6 +93,8 @@ services:
       - "5003:8080"
     volumes:
       - ./logs/booking:/app/Logs
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     logging:
       driver: "json-file"
       options:
@@ -91,10 +108,13 @@ services:
     depends_on:
       - rabbitmq-rspot
     environment:
+      TZ: Europe/Moscow
       ASPNETCORE_ENVIRONMENT: Development
       RabbitMq__Host: rabbitmq-rspot
     volumes:
       - ./logs/notification:/app/Logs
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     logging:
       driver: "json-file"
       options:
@@ -110,6 +130,7 @@ services:
       - rabbitmq-rspot
       - mongo-places
     environment:
+      TZ: Europe/Moscow
       ASPNETCORE_ENVIRONMENT: Development
       JwtSettings__Secret: ОченьДлинныйИБезопасныйКлючДляHS256Минимум32Байта
       JwtSettings__Issuer: RSpot
@@ -122,6 +143,9 @@ services:
       FrontendUrl: "http://localhost:5173"
     ports:
       - "5002:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   rabbitmq-rspot:
     image: rabbitmq:3-management
@@ -130,6 +154,11 @@ services:
       - "5672:5672"
       - "15672:15672"
     restart: always
+    environment:
+      TZ: Europe/Moscow
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   frontend:
     build:
@@ -138,3 +167,8 @@ services:
     ports:
       - "5173:80"                 
     restart: always
+    environment:
+      TZ: Europe/Moscow
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
